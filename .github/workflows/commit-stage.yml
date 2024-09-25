@@ -1,0 +1,39 @@
+name: Commit Stage  # The name of the workflow
+on: push            # The workflow is triggered when new code is pushed to the repository.
+
+jobs:
+  build:
+    name: Build and Test      # The job’s unique identifier
+    runs-on: ubuntu-22.04     # The type of machine where the job should be run
+    permissions:              # The permissions granted to the job
+      contents: read          # Permission to check out the current Git repository
+      security-events: write  # Permission to submit security events to GitHub
+    steps:
+      - name: Checkout source code # Checks out the current Git repository (catalog-service)
+        uses: actions/checkout@v4  #
+      - name: Set up JDK              # Installs and configures a Java runtime
+        uses: actions/setup-java@v4   #
+        with:                         # Defines which version, distribution, and cache type to use
+          distribution: temurin       #
+          java-version: 17            #
+          cache: gradle               #
+      - name: Build, unit tests and integration tests
+        run: |
+          chmod +x gradlew
+          ./gradlew build
+      - name: Code vulnerability scanning
+        uses: anchore/scan-action@v3  # Scans the codebase for vulnerabilities using grype
+        id: scan                      # Assigns an identifier to the current step so that it can be referenced from subsequent steps
+        with:
+          path: "${{ github.workspace }}"  # The path to the checked-out repository
+          fail-build: false                # Whether to fail the build in the event of security vulnerabilities
+          severity-cutoff: high            # The minimum security category to be considered as an error (low, medium, high, critical)
+      - name: Upload vulnerability report             # Whether to enable the generation of a report after the scan is completed
+        uses: github/codeql-action/upload-sarif@v3    # Uploads the security vulnerability report to GitHub (SARIF format)
+        if: success() || failure()                    # Uploads the report even if the previous step fails
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }} # Fetches the report from the output of the previous step
+      - name: Build, unit tests and integration tests  # Ensures the Gradle wrapper is executable, solving Windows incompatibilities
+        run: |                                        # Runs the Gradle build task, which compiles the codebase and runs unit and integration tests
+            chmod +x gradlew                           
+            ./gradlew build
