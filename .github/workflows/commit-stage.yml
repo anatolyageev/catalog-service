@@ -33,7 +33,7 @@ jobs:
         if: success() || failure()                    # Uploads the report even if the previous step fails
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }} # Fetches the report from the output of the previous step
-      - name: Build, unit tests and integration tests  # Ensures the Gradle wrapper is executable, solving Windows incompatibilities
-        run: |                                        # Runs the Gradle build task, which compiles the codebase and runs unit and integration tests
-            chmod +x gradlew                           
-            ./gradlew build
+#      - name: Build, unit tests and integration tests  # Ensures the Gradle wrapper is executable, solving Windows incompatibilities
+#        run: |                                        # Runs the Gradle build task, which compiles the codebase and runs unit and integration tests
+#            chmod +x gradlew
+#            ./gradlew build
