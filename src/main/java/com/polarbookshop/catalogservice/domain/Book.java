@@ -1,11 +1,21 @@
 package com.polarbookshop.catalogservice.domain;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
+
+import java.time.Instant;
 
 
-public record Book (
+public record Book(
+
+    @Id // Identifies the field as the primary key for the entity
+    Long id,
     @NotBlank(message = "The book ISBN must be defined.")
     @Pattern(
         regexp = "^([0-9]{10}|[0-9]{13})$",
@@ -20,11 +30,28 @@ public record Book (
         message = "The book author must be defined."
     )
     String author,
-//    @NotBlank(
-//        message = "The book price must be defined."
-//    )
+    @NotNull(
+        message = "The book price must be defined."
+    )
     @Positive(
         message = "The book price must be greater than zero."
     )
-    Double price
-){}
+    Double price,
+
+    @CreatedDate //  Adding field to store audit metadata in a persistent entity. When the entity was created
+    Instant createdDate,
+
+    @LastModifiedDate // Adding field to store audit metadata in a persistent entity. When the entity was last modified
+    Instant lastModifiedDate,
+
+    @Version // The entity version number, which is used for optimistic locking
+    int version
+) {
+    public static Book of(
+        String isbn, String title, String author, Double price
+    ) {
+        return new Book(
+            null, isbn, title, author, price, null, null, 0
+        );
+    }
+}
