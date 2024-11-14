@@ -21,9 +21,9 @@ spring:
     hikari: # Spring Boot uses HikariCP for connection pooling, and you can configure it from the application.yml file
       connection-timeout: 2000 # The maximum time (ms) to spend waiting to get a connection from the pool
       maximum-pool-size: 5 # The maximum number of connections HikariCP will keep in the pool
-  sql:
-    init:
-      mode: always
+#  sql:     # Removed due to flyway being used instead
+#    init:
+#      mode: always
 
 server:
   port: 9099
