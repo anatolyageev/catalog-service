@@ -1,0 +1,9 @@
+# Bases the new image on the official image for Ubuntu, version 22.04
+FROM ubuntu:22.04
+
+# Installs the JRE using familiar bash commands
+RUN apt-get update && apt-get install -y default-jre
+
+#Defines the execution entry point for the running container
+ENTRYPOINT ["java", "--version"]
+
