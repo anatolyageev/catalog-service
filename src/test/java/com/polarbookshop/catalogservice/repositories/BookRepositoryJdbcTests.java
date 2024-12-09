@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -34,7 +35,7 @@ class BookRepositoryJdbcTests {
     @Test
     void findBookByIsbnWhenBookExists() {
         var bookIsbn = "1234567890";
-        var book = Book.of(bookIsbn, "Title", "Author", 9.0, "Polarsophia");
+        var book = Book.of(bookIsbn, "Title", "Author", 9.0, "Polarsophia", Instant.now(), Instant.now(), 0);
         jdbcAggregateTemplate.insert(book); // JdbcAggregateTemplate is used to prepare the data targeted by the test.
         Optional<Book> actualBook = bookRepository.findByIsbn(bookIsbn);
 
@@ -44,8 +45,8 @@ class BookRepositoryJdbcTests {
 
     @Test
     void findAllBooks() {
-        var book1 = Book.of("1234561235", "Title", "Author", 12.90, "Polarsophia");
-        var book2 = Book.of("1234561236", "Another Title", "Author", 12.90, "Polarsophia");
+        var book1 = Book.of("1234561235", "Title", "Author", 12.90, "Polarsophia", Instant.now(), Instant.now(), 0);
+        var book2 = Book.of("1234561236", "Another Title", "Author", 12.90, "Polarsophia", Instant.now(), Instant.now(), 0);
         jdbcAggregateTemplate.insert(book1);
         jdbcAggregateTemplate.insert(book2);
 
