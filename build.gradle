@@ -65,19 +65,27 @@ bootRun {
 def myEnvGithabToken = System.getenv('MY_GITHUB_TOKEN')
 def myEnvGithabUserName = System.getenv('MY_GITHUB_USERNAME')
 bootBuildImage { //The Spring Boot Plugin task to build an OCI image using Buildpacks
+    builder = "docker.io/paketobuildpacks/builder-jammy-base"
     imageName = "${project.name}" // The name of the OCI image to build. The name is the same one defined in the
                                   // Gradle configuration for the project. We rely on the implicit “latest” tag when
                                   // working locally rather than a version number.
     environment = ["BP_JVM_VERSION" : "17.*"] // The JVM version to be installed in the image. It uses the latest Java 17 version.
 
 //    println "Environment Variable MY_GITHUB_TOKEN: ${myEnvGithabToken}"
-
+//
 //    println "Environment Variable MY_GITHUB_USERNAME: ${myEnvGithabUserName}"
+//    docker {
+//        publishRegistry {
+//            username = project.findProperty("${myEnvGithabUserName}")
+//            password = project.findProperty("${myEnvGithabToken}")
+//            url = project.findProperty("ghcr.io")
+//        }
+//    }
     docker {
         publishRegistry {
-            username = project.findProperty("${myEnvGithabUserName}")
-            password = project.findProperty("${myEnvGithabToken}")
-            url = project.findProperty("ghcr.io")
+            username = project.findProperty("registryUsername")
+            password = project.findProperty("registryToken")
+            url = project.findProperty("registryUrl")
         }
     }
 }
