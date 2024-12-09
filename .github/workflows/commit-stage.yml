@@ -59,8 +59,8 @@ jobs:
       - name: Build container image            # Relies on the Buildpacks integration in Spring Boot to build a container image and defines the name for the release candidate
         run: |
           chmod +x gradlew
-          ./gradlew bootBuildImage \             
-            --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          ./gradlew bootBuildImage --imageName ghcr.io/anatolyageev/catalog-service:latest
+#            --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
       - name: OCI image vulnerability scanning
         uses: anchore/scan-action@v3           # Scans the release candidate image for vulnerabilities using grype
         id: scan
