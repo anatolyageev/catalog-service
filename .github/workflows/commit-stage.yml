@@ -65,7 +65,8 @@ jobs:
         uses: anchore/scan-action@v3           # Scans the release candidate image for vulnerabilities using grype
         id: scan
         with:                                  # The image to scan is the release candidate.
-          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+#          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          image: ghcr.io/anatolyageev/catalog-service:latest
           fail-build: false                    # It won’t fail the build if vulnerabilities are found in the image.
           severity-cutoff: high
       - name: Upload vulnerability report
@@ -78,6 +79,6 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}          # The registry value as defined in the environment variable earlier
           username: ${{ github.actor }}          # The GitHub username of the current user, provided by GitHub Actions
-          password: ${{ secrets.CR_PAT }}  # The token needed to authenticate with the registry, provided by GitHub Actions
+          password: ${{ secrets.CR_PAT }}        # The token needed to authenticate with the registry, provided by GitHub Actions
       - name: Publish container image            # Pushes the release candidate to the registry
         run: docker push ghcr.io/anatolyageev/catalog-service:latest
