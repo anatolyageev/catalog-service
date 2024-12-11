@@ -75,9 +75,13 @@ jobs:
           sarif_file: ${{ steps.scan.outputs.sarif }}
       - name: Log into container registry
         uses: docker/login-action@v3             # Authenticates with GitHub Container Registry
-        with:
-          registry: ${{ env.REGISTRY }}          # The registry value as defined in the environment variable earlier
-          username: ${{ github.actor }}          # The GitHub username of the current user, provided by GitHub Actions
-          password: ${{ secrets.GITHUB_TOKEN }}  # The token needed to authenticate with the registry, provided by GitHub Actions
+
+      - name: Log into GitHub Container Registry with PAT
+        run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+#        with:
+#          registry: ${{ env.REGISTRY }}          # The registry value as defined in the environment variable earlier
+#          username: ${{ github.actor }}          # The GitHub username of the current user, provided by GitHub Actions
+#          password: ${{ secrets.GITHUB_TOKEN }}  # The token needed to authenticate with the registry, provided by GitHub Actions
       - name: Publish container image            # Pushes the release candidate to the registry
         run: docker push ghcr.io/anatolyageev/catalog-service:latest
