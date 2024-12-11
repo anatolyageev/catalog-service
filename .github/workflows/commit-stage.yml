@@ -80,4 +80,4 @@ jobs:
           username: ${{ github.actor }}          # The GitHub username of the current user, provided by GitHub Actions
           password: ${{ secrets.GITHUB_TOKEN }}  # The token needed to authenticate with the registry, provided by GitHub Actions
       - name: Publish container image            # Pushes the release candidate to the registry
-        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        run: docker push ghcr.io/anatolyageev/catalog-service:latest
