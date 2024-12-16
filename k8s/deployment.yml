@@ -1,0 +1,28 @@
+apiVersion: apps/v1       # The API version for Deployment objects
+kind: Deployment          # The type of object to create
+metadata:
+  name: catalog-service   # The name of the Deployment
+  labels:                 # A set of labels attached to the Deployment
+    app: catalog-service  # This Deployment is labeled with “app=catalog-service.”
+spec:
+  selector:                      # Defines the labels used to select the Pods to be scaled
+    matchLabels:
+      app: catalog-service
+  template:                         # The template for creating a Pod
+    metadata:
+      labels:                       # Labels attached to the Pod object. They should match the ones used as selectors.
+        app: catalog-service
+    spec:
+      containers:                   # The list of containers in the Pod (one in this case)
+        - name: catalog-service     # The name of the Pod
+          image: catalog-service    # The image used to run the container. No tag is defined, so “latest” will be used implicitly.
+          imagePullPolicy: IfNotPresent   # Instructs Kubernetes to pull the image from a container registry only if it’s not present locally yet
+          ports:
+            - containerPort: 9001         # The ports exposed by the container
+          env:                            # The list of environment variables passed to the Pod
+            - name: BPL_JVM_THREAD_COUNT  # A Paketo Buildpacks environment variable to configure the number of threads for memory calculation
+              value: "50"
+            - name: SPRING_DATASOURCE_URL  # A value for the spring.datasource.url property pointing to the PostgreSQL Pod deployed previously
+              value: jdbc:postgresql://polar-postgres/polardb_catalog
+            - name: SPRING_PROFILES_ACTIVE # Enables the “testdata” Spring profile
+              value: testdata
