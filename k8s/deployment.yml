@@ -5,6 +5,7 @@ metadata:
   labels:                 # A set of labels attached to the Deployment
     app: catalog-service  # This Deployment is labeled with “app=catalog-service.”
 spec:
+  replicas: 2                    # How many Pod replicas should be deployed
   selector:                      # Defines the labels used to select the Pods to be scaled
     matchLabels:
       app: catalog-service
@@ -17,6 +18,10 @@ spec:
         - name: catalog-service     # The name of the Pod
           image: catalog-service    # The image used to run the container. No tag is defined, so “latest” will be used implicitly.
           imagePullPolicy: IfNotPresent   # Instructs Kubernetes to pull the image from a container registry only if it’s not present locally yet
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "sh", "-c", "sleep 5" ]     # Makes Kubernetes wait 5 seconds before sending the SIGTERM signal to the Pod
           ports:
             - containerPort: 9001         # The ports exposed by the container
           env:                            # The list of environment variables passed to the Pod

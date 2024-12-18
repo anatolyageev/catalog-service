@@ -1,0 +1,14 @@
+apiVersion: v1              # The API version for Service objects
+kind: Service               # The type of object to create
+metadata:
+  name: catalog-service     # The name of the Service; it must be a valid DNS name.
+  labels:
+    app: catalog-service    # A label attached to the Service
+spec:
+  type: ClusterIP           # The type of Service
+  selector:
+    app: catalog-service    # The label used to match the Pods to target and expose
+  ports:
+  - protocol: TCP           # The network protocol used by the Service
+    port: 80                # The port exposed by the Service
+    targetPort: 9001        # The port exposed by the Pods targeted by the Service

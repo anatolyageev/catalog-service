@@ -1,6 +1,8 @@
 spring:
   application:
     name: catalog-service
+  lifecycle:
+    timeout-per-shutdown-phase: 15s   # Defines a 15 s grace period
   config:
     import: "optional:configserver:"
 #  cloud:
@@ -33,6 +35,7 @@ server:
     threads:
       max: 50
       min-spare: 5
+  shutdown: graceful              # Enable graceful shutdown
 polar:
   greeting: Welcome to the local book catalog!
 
